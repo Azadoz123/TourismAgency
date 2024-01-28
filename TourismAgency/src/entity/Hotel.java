@@ -16,7 +16,26 @@ public class Hotel {
 
     public Hotel() {
     }
-
+    public Hotel(String name, String address, String phoneNumber, String star) {
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.star = star;
+    }
+    public Hotel(String name, String address, String phoneNumber, String star, boolean car_parking, boolean wifi,
+                 boolean pool, boolean fitness_center, boolean concierge, boolean spa, boolean room_service) {
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.star = star;
+        this.car_parking = car_parking;
+        this.wifi = wifi;
+        this.pool = pool;
+        this.fitness_center = fitness_center;
+        this.concierge = concierge;
+        this.spa = spa;
+        this.room_service = room_service;
+    }
     public Hotel(int id, String name, String address, String phoneNumber, String star, boolean car_parking, boolean wifi,
                  boolean pool, boolean fitness_center, boolean concierge, boolean spa, boolean room_service) {
         this.id = id;

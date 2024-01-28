@@ -5,6 +5,7 @@ import entity.Hotel;
 import entity.User;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,28 @@ public class HotelDao {
             e.printStackTrace();
         }
         return otelList;
+    }
+    public boolean save(Hotel hotel){
+        String query = "INSERT INTO public.hotel (name,address,phone,star,car_parking,wifi,pool,fitness,concierge,spa,room_service) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = this.connection.prepareStatement(query);
+            preparedStatement.setString(1,hotel.getName());
+            preparedStatement.setString(2,hotel.getAddress());
+            preparedStatement.setString(3,hotel.getPhoneNumber());
+            preparedStatement.setString(4,hotel.getStar());
+            preparedStatement.setBoolean(5,hotel.isCar_parking());
+            preparedStatement.setBoolean(6,hotel.isWifi());
+            preparedStatement.setBoolean(7,hotel.isPool());
+            preparedStatement.setBoolean(8,hotel.isFitness_center());
+            preparedStatement.setBoolean(9,hotel.isConcierge());
+            preparedStatement.setBoolean(10,hotel.isSpa());
+            preparedStatement.setBoolean(11,hotel.isRoom_service());
+            return preparedStatement.executeUpdate() != -1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
     public Hotel match(ResultSet resultSet) throws SQLException {
         Hotel hotel = new Hotel();

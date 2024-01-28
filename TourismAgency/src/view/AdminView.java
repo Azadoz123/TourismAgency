@@ -57,7 +57,9 @@ public class AdminView extends Layout{
         });
 
         this.hotelMenu = new JPopupMenu();
-        this.hotelMenu.add("Add");
+        this.hotelMenu.add("Add").addActionListener(e -> {
+            HotelView hotelView = new HotelView(null);
+        });
 
         this.tbl_hotel.setComponentPopupMenu(hotelMenu);
     }

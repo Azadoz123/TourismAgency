@@ -1,5 +1,6 @@
 package business;
 
+import core.Helper;
 import dao.HotelDao;
 import dao.UserDao;
 import entity.Hotel;
@@ -16,5 +17,11 @@ public class HotelManager {
     }
     public ArrayList<Hotel> findAll(){
         return this.hotelDao.findAll();
+    }
+    public boolean save(Hotel hotel){
+        if(hotel.getId() != 0){
+            Helper.showMessage("error");
+        }
+        return this.hotelDao.save(hotel);
     }
 }
