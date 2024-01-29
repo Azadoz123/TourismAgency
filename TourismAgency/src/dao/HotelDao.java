@@ -20,7 +20,7 @@ public class HotelDao {
     public ArrayList<Hotel> findAll(){
         ArrayList<Hotel> otelList = new ArrayList<>();
         Hotel hotel = null;
-        String sql = "SELECT * FROM public.hotel";
+        String sql = "SELECT * FROM public.hotel ORDER BY id ASC";
 
         try {
             ResultSet resultSet = this.connection.createStatement().executeQuery(sql);
@@ -49,6 +49,32 @@ public class HotelDao {
             preparedStatement.setBoolean(9,hotel.isConcierge());
             preparedStatement.setBoolean(10,hotel.isSpa());
             preparedStatement.setBoolean(11,hotel.isRoom_service());
+            return preparedStatement.executeUpdate() != -1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public Hotel getById(int id){
+        Hotel hotel = null;
+        String query = "SELECT * FROM public.hotel WHERE id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                hotel = this.match(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return hotel;
+    }
+    public boolean delete(int id){
+        String query = "DELETE FROM public.hotel WHERE id = ? ";
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = this.connection.prepareStatement(query);
+            preparedStatement.setInt(1,id);
             return preparedStatement.executeUpdate() != -1;
         } catch (SQLException e) {
             throw new RuntimeException(e);

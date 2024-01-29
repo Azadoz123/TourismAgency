@@ -15,6 +15,27 @@ public class HotelManager {
 
         this.hotelDao = new HotelDao();
     }
+    public ArrayList<Object[]> getForTable(int size){
+        ArrayList<Object[]> brandRowList = new ArrayList<>();
+        for (Hotel hotel: this.findAll()) {
+            Object[] rowObject = new Object[size];
+            int i = 0;
+            rowObject[i++] = hotel.getId();
+            rowObject[i++] = hotel.getName();
+            rowObject[i++] = hotel.getAddress();
+            rowObject[i++] = hotel.getPhoneNumber();
+            rowObject[i++] = hotel.getStar();
+            rowObject[i++] = hotel.isCar_parking();
+            rowObject[i++] = hotel.isWifi();
+            rowObject[i++] = hotel.isPool();
+            rowObject[i++] = hotel.isFitness_center();
+            rowObject[i++] = hotel.isConcierge();
+            rowObject[i++] = hotel.isSpa();
+            rowObject[i++] = hotel.isRoom_service();
+            brandRowList.add(rowObject);
+        }
+        return brandRowList;
+    }
     public ArrayList<Hotel> findAll(){
         return this.hotelDao.findAll();
     }
@@ -23,5 +44,13 @@ public class HotelManager {
             Helper.showMessage("error");
         }
         return this.hotelDao.save(hotel);
+    }
+    public boolean delete(int id){
+        if(this.hotelDao.getById(id) == null){
+            Helper.showMessage(id + " ID kayıtlı marka bulunamadı");
+            return false;
+        }
+
+        return this.hotelDao.delete(id);
     }
 }

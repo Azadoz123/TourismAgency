@@ -16,29 +16,30 @@ public class Helper {
         }
     }
     public static void showMessage(String str){
+
         String msg;
         String title;
 
         switch (str){
             case "fill":
-                msg = "Lütfen tüm alanalrı doldurunuz !";
-                title = "Hata";
+                msg = "Please, fill all area !";
+                title = "Error";
                 break;
             case "done":
-                msg = "İşlem Başarılı !";
+                msg = "Operation is successful!";
                 title = "Sonuç";
                 break;
             case "notFound":
-                msg = "Kayıt bulunmadı";
-                title= "Bulunamadı";
+                msg = "Registry is not found";
+                title= "Not Found";
                 break;
             case "error":
-                msg = "Hatalı işlem yaptınız !";
-                title= "Hata !";
+                msg = "You made mistake operarion!";
+                title= "Error !";
                 break;
             default:
                 msg = str;
-                title = "Mesaj";
+                title = "Message";
         }
         JOptionPane.showMessageDialog(null,msg, title,JOptionPane.INFORMATION_MESSAGE);
     }
@@ -51,5 +52,21 @@ public class Helper {
                 return true;
         }
         return false;
+    }
+    public static boolean confirm(String str){
+
+        String msg;
+        if(str.equals("sure")){
+            msg = "Are you sure for this operation ?";
+        }else {
+            msg = str;
+        }
+
+        return JOptionPane.showConfirmDialog(null,msg,"Are you sure?",JOptionPane.YES_NO_OPTION) == 0;
+    }
+    public static void optionPaneTR(){
+        UIManager.put("OptionPane.okButtonText", "Tamam");
+        UIManager.put("OptionPane.yesButtonText", "Evet");
+        UIManager.put("OptionPane.noButtonText", "Hayır");
     }
 }

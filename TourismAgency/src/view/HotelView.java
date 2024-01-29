@@ -25,6 +25,7 @@ public class HotelView extends Layout{
         this.hotel =hotel;
         this.add(container);
         guiInitialize(300, 200);
+
         btn_hotel_save.addActionListener(e ->{
 //            JTextField[] textFieldsArray= {};
             if(Helper.isFieldListEmpty(new JTextField[]{fld_hotel_name, this.fld_hotel_address, this.fld_hotel_phone, this.fld_hotel_star})){

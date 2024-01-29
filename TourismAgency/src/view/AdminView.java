@@ -1,6 +1,7 @@
 package view;
 
 import business.HotelManager;
+import core.Helper;
 import entity.Hotel;
 import entity.User;
 
@@ -8,6 +9,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class AdminView extends Layout{
@@ -33,21 +36,13 @@ public class AdminView extends Layout{
         }
 
         this.lbl_welcome.setText("Welcome, " + this.user.getUsername());
+        loadHotelTable();
+        loadHotelComponent();
 
-        Object[] col_hotel = {"Hotel ID", "Hotel Name", "Hotel Address", "Hotel Phone Number", "Hotel Star",
-                "Car Parking", "Wifi", "Pool", "Fitness Center", "Concierge", "SPA", "Room Service"};
-        ArrayList<Hotel> hotelArrayList = hotelManager.findAll();
-        this.t_model_hotel.setColumnIdentifiers(col_hotel);
-        for (Hotel hotel: hotelArrayList){
-            Object[] obj = { hotel.getId(), hotel.getName(), hotel.getAddress(),hotel.getPhoneNumber(),hotel.getStar(),hotel.isPool(),
-                    hotel.isCar_parking(),hotel.isWifi(),hotel.isPool(),hotel.isFitness_center(),hotel.isConcierge(),
-                    hotel.isSpa(),hotel.isRoom_service()};
-            t_model_hotel.addRow(obj);
-        };
+        this.tbl_hotel.setComponentPopupMenu(hotelMenu);
+    }
 
-        this.tbl_hotel.setModel(t_model_hotel);
-        this.tbl_hotel.getTableHeader().setReorderingAllowed(false);
-        this.tbl_hotel.setEnabled(false);
+    private void loadHotelComponent() {
         this.tbl_hotel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -55,12 +50,35 @@ public class AdminView extends Layout{
                 tbl_hotel.setRowSelectionInterval(selectedRow,selectedRow);
             }
         });
-
         this.hotelMenu = new JPopupMenu();
         this.hotelMenu.add("Add").addActionListener(e -> {
             HotelView hotelView = new HotelView(null);
+            hotelView.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadHotelTable();
+                }
+            });
         });
 
-        this.tbl_hotel.setComponentPopupMenu(hotelMenu);
+        this.hotelMenu.add("Delete").addActionListener(e -> {
+            if (Helper.confirm("sure")){
+                int selectedHotelId = this.getTableSelectedRow(tbl_hotel,0);
+                if (this.hotelManager.delete(selectedHotelId)){
+                    Helper.showMessage("done");
+                    loadHotelTable();
+                }else {
+                    Helper.showMessage("error");
+                }
+            }
+
+        });
+    }
+
+    public void loadHotelTable(){
+        Object[] col_hotel = {"Hotel ID", "Hotel Name", "Hotel Address", "Hotel Phone Number", "Hotel Star",
+                "Car Parking", "Wifi", "Pool", "Fitness Center", "Concierge", "SPA", "Room Service"};
+        ArrayList<Object[]> hotelList = this.hotelManager.getForTable(col_hotel.length);
+        this.createTable(this.t_model_hotel,this.tbl_hotel,col_hotel,hotelList);
     }
 }
