@@ -79,6 +79,7 @@ public class SeasonDao {
         season.setStartTime(resultSet.getDate("start_time"));
         season.setFinishTime(resultSet.getDate("finish_time"));
         season.setHotel_id(resultSet.getInt("hotel_id"));
+        season.setHotel(this.hotelDao.getById(resultSet.getInt("hotel_id")));
         return season;
     }
 }

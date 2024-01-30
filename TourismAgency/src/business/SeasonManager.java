@@ -1,6 +1,8 @@
 package business;
 
+import core.Helper;
 import dao.SeasonDao;
+import entity.Pension;
 import entity.Season;
 
 import java.util.ArrayList;
@@ -10,12 +12,12 @@ public class SeasonManager {
     public Season getById(int id){
         return this.seasonDao.getById(id);
     }
-    public ArrayList<Season> findALL(){
+    public ArrayList<Season> findAll(){
         return this.seasonDao.findAll();
     }
     public ArrayList<Object[]> getForTable(int size, ArrayList<Season> seasonList){
         ArrayList<Object[]> seasonObjList = new ArrayList<>();
-        for (Season season : seasons){
+        for (Season season : seasonList){
             Object[] rowObject = new Object[size];
             int i = 0;
             rowObject[i++] = season.getId();
@@ -25,5 +27,12 @@ public class SeasonManager {
             seasonObjList.add(rowObject);
         }
         return seasonObjList;
+    }
+    public boolean save(Season season){
+        if (this.getById(season.getId())  != null) {
+            Helper.showMessage("error");
+            return false;
+        }
+        return this.seasonDao.save(season);
     }
 }

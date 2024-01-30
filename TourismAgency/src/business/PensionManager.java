@@ -1,5 +1,6 @@
 package business;
 
+import core.Helper;
 import dao.PensionDao;
 import entity.Pension;
 
@@ -44,5 +45,12 @@ public class PensionManager {
             pensionObjList.add(rowObject);
         }
         return  pensionObjList;
+    }
+    public boolean save(Pension pension){
+        if (this.getById(pension.getId())  == null) {
+            Helper.showMessage("error");
+            return false;
+        }
+        return this.pensionDao.save(pension);
     }
 }

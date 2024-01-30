@@ -94,6 +94,7 @@ public class PensionDao {
         pension.setOnlyBad(resultSet.getBoolean("only_bed"));
         pension.setFullCreditNotIncludingAlcohol(resultSet.getBoolean("full_credit_not_including_alcohol"));
         pension.setHotel_id(resultSet.getInt("hotel_id"));
+        pension.setHotel(this.hotelDao.getById(resultSet.getInt("hotel_id")));
         return pension;
     }
 }
