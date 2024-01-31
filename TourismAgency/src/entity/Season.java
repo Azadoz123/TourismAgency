@@ -12,6 +12,12 @@ public class Season {
     public Season() {
     }
 
+    public Season(Date startTime, Date finishTime, int hotel_id) {
+        this.startTime = startTime;
+        this.finishTime = finishTime;
+        this.hotel_id = hotel_id;
+    }
+
     public int getId() {
         return id;
     }

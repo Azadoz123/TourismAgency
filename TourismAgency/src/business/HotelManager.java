@@ -2,9 +2,8 @@ package business;
 
 import core.Helper;
 import dao.HotelDao;
-import dao.UserDao;
 import entity.Hotel;
-import view.AdminView;
+import entity.User;
 
 import java.util.ArrayList;
 
@@ -50,7 +49,9 @@ public class HotelManager {
             Helper.showMessage(id + " ID kayıtlı marka bulunamadı");
             return false;
         }
-
         return this.hotelDao.delete(id);
+    }
+    public Hotel getById(int id){
+        return this.hotelDao.getById(id);
     }
 }

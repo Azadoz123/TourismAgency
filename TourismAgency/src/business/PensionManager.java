@@ -14,7 +14,7 @@ public class PensionManager {
     public ArrayList<Pension> findAll(){
         return this.pensionDao.findAll();
     }
-    public ArrayList<Object[]> getForTable(int size, ArrayList<Pension> pensionList){
+    /*public ArrayList<Object[]> getForTable(int size, ArrayList<Pension> pensionList){
         ArrayList<Object[]> pensionObjList = new ArrayList<>();
         for (Pension pension : pensionList){
             Object[] rowObject = new Object[size];
@@ -42,6 +42,18 @@ public class PensionManager {
             if(pension.isFullCreditNotIncludingAlcohol()){
                 rowObject[i++] = "FULL CREDIT NOT INCLUDING ALCOHOL";
             }
+            pensionObjList.add(rowObject);
+        }
+        return  pensionObjList;
+    }*/
+    public ArrayList<Object[]> getForTable(int size, ArrayList<Pension> pensionList){
+        ArrayList<Object[]> pensionObjList = new ArrayList<>();
+        for (Pension pension : pensionList){
+            Object[] rowObject = new Object[size];
+            int i = 0;
+            rowObject[i++] = pension.getId();
+            rowObject[i++] = pension.getHotel().getName();
+            rowObject[i++] = pension.getType();
             pensionObjList.add(rowObject);
         }
         return  pensionObjList;

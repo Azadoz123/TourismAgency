@@ -15,6 +15,9 @@ public class SeasonManager {
     public ArrayList<Season> findAll(){
         return this.seasonDao.findAll();
     }
+    public ArrayList<Season> getSeasonListByHotelId(int id){
+        return this.seasonDao.getSeasonListByHotelId(id);
+    }
     public ArrayList<Object[]> getForTable(int size, ArrayList<Season> seasonList){
         ArrayList<Object[]> seasonObjList = new ArrayList<>();
         for (Season season : seasonList){

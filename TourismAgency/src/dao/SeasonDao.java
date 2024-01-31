@@ -34,6 +34,20 @@ public class SeasonDao {
     public ArrayList<Season> findAll(){
         return selectByQuery("SELECT * FROM public.season ORDER BY id ASC");
     }
+    public ArrayList<Season> getSeasonListByHotelId(int id){
+        String query= "SELECT * FROM public.season WHERE hotel_id = " + id + " ORDER BY id ASC";
+        return selectByQuery(query);
+        /*ArrayList<Season> seasonList = new ArrayList<>();
+        try {
+            ResultSet resultSet = this.connection.createStatement().executeQuery(query);
+            while (resultSet.next()){
+                seasonList.add(this.match(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return seasonList;*/
+    }
     public ArrayList<Season> selectByQuery(String query){
         ArrayList<Season> seasonList = new ArrayList<>();
         try {
@@ -46,6 +60,7 @@ public class SeasonDao {
         }
         return seasonList;
     }
+
     public boolean save(Season season){
         String query = "INSERT INTO public.season" +
                 "(" +

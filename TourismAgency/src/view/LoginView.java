@@ -5,9 +5,6 @@ import core.Helper;
 import entity.User;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginView extends Layout{
     private JPanel container;
@@ -35,7 +32,7 @@ public class LoginView extends Layout{
                 if(loginUser == null){
                     Helper.showMessage("notFound");
                 }else {
-                    AdminView adminView = new AdminView(loginUser);
+                    HotelView adminView = new HotelView(loginUser);
                     dispose();
                 }
             }
