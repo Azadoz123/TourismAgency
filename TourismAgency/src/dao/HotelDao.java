@@ -16,7 +16,7 @@ public class HotelDao {
     public HotelDao() {
         this.connection = Db.getInstance();
     }
-
+    // get all hotel
     public ArrayList<Hotel> findAll(){
         ArrayList<Hotel> otelList = new ArrayList<>();
         Hotel hotel = null;
@@ -32,6 +32,7 @@ public class HotelDao {
         }
         return otelList;
     }
+    //save hotel
     public boolean save(Hotel hotel){
         String query = "INSERT INTO public.hotel (name,address,phone,star,car_parking,wifi,pool,fitness,concierge,spa,room_service) " +
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
@@ -54,6 +55,7 @@ public class HotelDao {
             throw new RuntimeException(e);
         }
     }
+    //get hotel by Id
     public Hotel getById(int id){
         Hotel hotel = null;
         String query = "SELECT * FROM public.hotel WHERE id = ?";
@@ -69,6 +71,7 @@ public class HotelDao {
         }
         return hotel;
     }
+    //delete hotel
     public boolean delete(int id){
         String query = "DELETE FROM public.hotel WHERE id = ? ";
         PreparedStatement preparedStatement = null;
@@ -80,6 +83,7 @@ public class HotelDao {
             throw new RuntimeException(e);
         }
     }
+    //match database hotel
     public Hotel match(ResultSet resultSet) throws SQLException {
         Hotel hotel = new Hotel();
         hotel.setId(resultSet.getInt("id"));

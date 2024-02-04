@@ -34,9 +34,13 @@ public class Helper {
                 title= "Not Found";
                 break;
             case "error":
-                msg = "You made mistake operarion!";
+                msg = "You made mistake operation!";
                 title= "Error !";
                 break;
+            case "outOfStock":
+                    msg = "Stock of this room not available";
+                    title= "Error !";
+                    break;
             default:
                 msg = str;
                 title = "Message";

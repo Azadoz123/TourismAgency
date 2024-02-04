@@ -2,7 +2,6 @@ package view;
 
 import business.UserManager;
 import core.Helper;
-import entity.Hotel;
 import entity.User;
 
 import javax.swing.*;
@@ -17,6 +16,7 @@ public class AddUserView extends Layout{
     private JTextField fld_user_password;
     private JTextField fld_user_role;
     private JButton btn_user_save;
+    private JComboBox<User.Role> cmb_user_role;
     private User user;
     private UserManager userManager;
     public AddUserView(User user) {
@@ -26,25 +26,29 @@ public class AddUserView extends Layout{
         this.add(container);
         guiInitialize(300,300);
 
-        if(user != null){
+        cmb_user_role.setModel(new DefaultComboBoxModel<>(User.Role.values()));
+
+        if(user.getId() != 0){
             this.fld_user_name.setText(this.user.getUsername());
             this.fld_user_password.setText(this.user.getPassword());
-            this.fld_user_role.setText(this.user.getRole());
+            this.cmb_user_role.setSelectedItem(this.user.getRole());
+          //  this.fld_user_role.setText(String.valueOf() );
         }
+        //save user
         btn_user_save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                if(Helper.isFieldListEmpty(new JTextField[]{fld_user_name, fld_user_password, fld_user_role})){
+                //check empty field
+                if(Helper.isFieldListEmpty(new JTextField[]{fld_user_name, fld_user_password})){
                     Helper.showMessage("fill");
                 }else{
                     boolean result =true;
-                    if(user == null){
-                        result =userManager.save(new User(fld_user_name.getText(),fld_user_password.getText(),fld_user_role.getText()));
+                    if(user.getId() == 0){
+                        result =userManager.save(new User(fld_user_name.getText(),fld_user_password.getText(), (User.Role) cmb_user_role.getSelectedItem()) );
                     }else {
                         user.setUsername(fld_user_name.getText());
                         user.setPassword(fld_user_password.getText());
-                        user.setRole(fld_user_role.getText());
+                        user.setRole((User.Role) cmb_user_role.getSelectedItem());
                         result = userManager.update(user);
                     }
                     if (result){

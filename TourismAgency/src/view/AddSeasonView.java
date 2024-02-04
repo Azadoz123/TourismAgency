@@ -8,6 +8,7 @@ import entity.Season;
 import javax.swing.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class AddSeasonView extends Layout{
@@ -29,25 +30,16 @@ public class AddSeasonView extends Layout{
 
      //   this.fld_season_hotel_name.setText(this.hotelManager.getById(hotel_id).getName());
         this.lbl_hotel_name.setText("Hotel Name : " + this.hotelManager.getById(hotel_id).getName());
+        //save season
         btn_season_save.addActionListener(e -> {
-          //  if(Helper.isFieldListEmpty(new JTextField[]{fld_sesason_id,fld_season_hotel_name,fld_start_time,fld_start_time})){
-            if(Helper.isFieldListEmpty(new JTextField[]{fld_season_hotel_name,fld_start_time,fld_start_time})){
+          // check empty field
+            if(Helper.isFieldListEmpty(new JTextField[]{fld_start_time,fld_start_time})){
                 Helper.showMessage("fill");
             }else{
                 boolean result = true;
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
-               // String dateInString = "7-Jun-2013";
-                Date date1 = null;
-                Date date2 =null;
-                try {
-                    date1 = formatter.parse(fld_start_time.getText());
-                    date2 = formatter.parse(fld_finish_time.getText());
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
                 if(this.season == null){
-                    result = this.seasonManager.save(new Season(date1,date2,hotel_id));
+                    result = this.seasonManager.save(new Season(LocalDate.parse(fld_start_time.getText()),LocalDate.parse(fld_finish_time.getText()),hotel_id));
                 }
                 if (result){
                     Helper.showMessage("done");

@@ -3,6 +3,7 @@ package dao;
 import core.Db;
 import entity.Hotel;
 import entity.Pension;
+import entity.Season;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +17,7 @@ public class PensionDao {
     public PensionDao() {
         this.connection = Db.getInstance();
     }
+    //get pension by Id
     public Pension getById(int id){
         Pension pension = null;
         String query = "SELECT * FROM public.pension WHERE id = ?";
@@ -30,9 +32,26 @@ public class PensionDao {
         }
         return pension;
     }
+    //get all pension
     public ArrayList<Pension> findAll(){
         return selectByQuery("SELECT * FROM public.pension ORDER BY id ASC");
     }
+    //get pension list by Hotel Id
+    public ArrayList<Pension> getPensionListByHotelId(int id){
+        String query= "SELECT * FROM public.pension WHERE hotel_id = " + id + " ORDER BY id ASC";
+        return selectByQuery(query);
+        /*ArrayList<Season> seasonList = new ArrayList<>();
+        try {
+            ResultSet resultSet = this.connection.createStatement().executeQuery(query);
+            while (resultSet.next()){
+                seasonList.add(this.match(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return seasonList;*/
+    }
+    // query for database
     public ArrayList<Pension> selectByQuery(String query){
         ArrayList<Pension> pensionList = new ArrayList<>();
         try {
@@ -45,35 +64,7 @@ public class PensionDao {
         }
         return pensionList;
     }
-
-    /*public boolean save(Pension pension){
-        String query = "INSERT INTO public.pension" +
-                "(" +
-                "ultra_all_include," +
-                "all_include," +
-                "room_breakfast," +
-                "full_pension," +
-                "half_pension," +
-                "only_bed," +
-                "full_credit_not_including_alcohol," +
-                "hotel_id" +
-                ")" +
-                " VALUES(?,?,?,?,?,?,?,?)";
-        try {
-            PreparedStatement preparedStatement = this.connection.prepareStatement(query);
-            preparedStatement.setBoolean(1,pension.isUltraAllInclude());
-            preparedStatement.setBoolean(2,pension.isAllIncule());
-            preparedStatement.setBoolean(3,pension.isRoomBreakfast());
-            preparedStatement.setBoolean(4,pension.isFullPension());
-            preparedStatement.setBoolean(5,pension.isHalfPension());
-            preparedStatement.setBoolean(6,pension.isOnlyBad());
-            preparedStatement.setBoolean(7,pension.isFullCreditNotIncludingAlcohol());
-            preparedStatement.setInt(8,pension.getHotel_id());
-            return preparedStatement.executeUpdate() != -1;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
+    //save pension
     public boolean save(Pension pension){
         String query = "INSERT INTO public.pension" +
                 "(" +
@@ -90,6 +81,7 @@ public class PensionDao {
             throw new RuntimeException(e);
         }
     }
+    //delete pension
     public boolean delete(int id){
         String query = "DELETE FROM public.pension WHERE id = ?";
         try {
@@ -100,20 +92,7 @@ public class PensionDao {
             throw new RuntimeException(e);
         }
     }
-    /*public Pension match(ResultSet resultSet) throws SQLException {
-        Pension pension =new Pension();
-        pension.setId(resultSet.getInt("id"));
-        pension.setUltraAllInclude(resultSet.getBoolean("ultra_all_include"));
-        pension.setAllIncule(resultSet.getBoolean("all_include"));
-        pension.setRoomBreakfast(resultSet.getBoolean("room_breakfast"));
-        pension.setFullPension(resultSet.getBoolean("full_pension"));
-        pension.setHalfPension(resultSet.getBoolean("half_pension"));
-        pension.setOnlyBad(resultSet.getBoolean("only_bed"));
-        pension.setFullCreditNotIncludingAlcohol(resultSet.getBoolean("full_credit_not_including_alcohol"));
-        pension.setHotel_id(resultSet.getInt("hotel_id"));
-        pension.setHotel(this.hotelDao.getById(resultSet.getInt("hotel_id")));
-        return pension;
-    }*/
+    //match pension database
     public Pension match(ResultSet resultSet) throws SQLException {
         Pension pension =new Pension();
         pension.setId(resultSet.getInt("id"));

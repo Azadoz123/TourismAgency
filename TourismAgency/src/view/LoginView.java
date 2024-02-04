@@ -32,8 +32,14 @@ public class LoginView extends Layout{
                 if(loginUser == null){
                     Helper.showMessage("notFound");
                 }else {
-                    HotelView adminView = new HotelView(loginUser);
-                    dispose();
+                    if(String.valueOf(loginUser.getRole()).equals("ADMIN") ){
+                        AdminView adminView = new AdminView(loginUser);
+                        dispose();
+                    }
+                    else {
+                        EmployeeView adminView = new EmployeeView(loginUser);
+                        dispose();
+                    }
                 }
             }
         });
