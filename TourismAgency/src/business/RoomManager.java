@@ -71,34 +71,7 @@ public class RoomManager {
     }
     //search room for reservation
     public ArrayList<Room> SearchForReservation(String hotelName, String hotelCity, String checkInDate, String checkOutDate, String countOfChild, String counOfAdult){
-         String query = "Select * FROM public.room as r LEFT JOIN public.hotel as h ON r.hotel_id = h.id " +
-                 "LEFT JOIN public.season as s ON r.season_id = s.id " +
-                 "LEFT JOIN public.pension as p ON r.pension_id = s.id";
-
-         ArrayList<String> where = new ArrayList<>();
-         ArrayList<String> joinWhere = new ArrayList<>();
-
-
-         /*joinWhere.add("r.hotel_id = h.id");
-         joinWhere.add("r.season_id = s.id");
-         joinWhere.add("r.pension_id = s.id");*/
-
-        if (!hotelName.equals(null)) where.add("h.name = '" + hotelName+ "'");
-     //  if (!hotelCity.equals(null)) where.add("h.city = '" + hotelCity +"'");
-      //  if (checkInDate != null) where.add("s.")
-
-        String whereStr = String.join(" AND ",where);
-        String joinStr = String.join(" AND ", joinWhere);
-
-        /*if(joinStr.length() > 0){
-            query += " ON " +joinStr;
-        }*/
-        if(whereStr.length() > 0){
-            query += " WHERE " + whereStr;
-        }
-
-        System.out.println(query);
-        return this.roomDao.selectByQuery(query);
+         return this.roomDao.SearchForReservation(hotelName,hotelCity,checkInDate,checkOutDate,countOfChild,counOfAdult);
     }
     public int totalPriceForRoom(Room room){
         return 0;

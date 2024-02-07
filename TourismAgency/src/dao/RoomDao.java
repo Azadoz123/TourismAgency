@@ -137,6 +137,42 @@ public class RoomDao {
         }
         return roomList;
     }
+    public ArrayList<Room> SearchForReservation(String hotelName, String hotelCity, String checkInDate, String checkOutDate, String countOfChild, String counOfAdult){
+        String query = "Select * FROM public.room as r LEFT JOIN public.hotel as h ON r.hotel_id = h.id " +
+                "LEFT JOIN public.season as s ON r.season_id = s.id " +
+                "LEFT JOIN public.pension as p ON r.pension_id = p.id";
+
+        ArrayList<String> where = new ArrayList<>();
+        ArrayList<String> joinWhere = new ArrayList<>();
+        // ArrayList<String> bookAndWhere = new ArrayList<>()
+
+         /*joinWhere.add("r.hotel_id = h.id");
+         joinWhere.add("r.season_id = s.id");
+         joinWhere.add("r.pension_id = s.id");*/
+
+        if (!hotelName.equals("")) where.add("h.name = '" + hotelName+ "'");
+        if (!hotelCity.equals("")) where.add("h.address = '" + hotelCity +"'");
+        where.add("('" + checkInDate + "' BETWEEN s.start_time AND s.finish_time)");
+        where.add("('" + checkOutDate + "' BETWEEN s.start_time AND s.finish_time)");
+        if(countOfChild.equals("")) countOfChild ="0";
+        if(counOfAdult.equals("")) counOfAdult ="0";
+        if((Integer.parseInt(countOfChild) + Integer.parseInt(counOfAdult)) >0 )
+            where.add("r.number_of_bed >= '" + (Integer.parseInt(countOfChild) + Integer.parseInt(counOfAdult)) + "'");
+        where.add(" r.stock > 0");
+
+        String whereStr = String.join(" AND ",where);
+        String joinStr = String.join(" AND ", joinWhere);
+
+        /*if(joinStr.length() > 0){
+            query += " ON " +joinStr;
+        }*/
+        if(whereStr.length() > 0){
+            query += " WHERE " + whereStr;
+        }
+
+        System.out.println(query);
+        return selectByQuery(query);
+    }
     //query for database
     public ArrayList<Room> selectByQuery(String query){
         ArrayList<Room> roomList = new ArrayList<>();

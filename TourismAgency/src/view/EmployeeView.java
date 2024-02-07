@@ -8,7 +8,11 @@ import entity.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import java.awt.event.*;
+import java.text.ParseException;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class EmployeeView extends Layout{
@@ -32,18 +36,18 @@ public class EmployeeView extends Layout{
     private JPanel pnl_reservation;
     private JTextField fld_src_hotel_name;
     private JTextField fld_src_hotel_city;
-    private JTextField fld_search_checj_in;
-    private JTextField fld_search_check_out;
     private JTextField fld_search_count_of_child;
     private JTextField fld_count_of_adult;
     private JButton btn_search_room;
-    private JButton btn_reset_room;
+    private JFormattedTextField fld_s_check_in;
+    private JFormattedTextField fld_s_check_out;
     private User user;
     private DefaultTableModel t_model_hotel = new DefaultTableModel();
     private DefaultTableModel t_model_pension = new DefaultTableModel();
     private DefaultTableModel t_model_season= new DefaultTableModel();
     private DefaultTableModel t_model_room= new DefaultTableModel();
     private DefaultTableModel t_model_reservation= new DefaultTableModel();
+    private Object[] col_room;
     private HotelManager hotelManager;
     private PensionManager pensionManager;
     private SeasonManager seasonManager;
@@ -97,11 +101,13 @@ public class EmployeeView extends Layout{
             ArrayList<Room> roomList = this.roomManager.SearchForReservation(
                     fld_src_hotel_name.getText(),
                     fld_src_hotel_city.getText(),
-                    fld_search_checj_in.getText(),
-                    fld_search_check_out.getText(),
+                    fld_s_check_in.getText(),
+                    fld_s_check_out.getText(),
                     fld_search_count_of_child.getText(),
                     fld_count_of_adult.getText()
             );
+            ArrayList<Object[]> roomBookingRow = this.roomManager.getForTable(this.col_room.length,roomList);
+            loadRoomTable(roomBookingRow);
         });
         this.reservation_menu = new JPopupMenu();
         //delete reservation
@@ -125,7 +131,9 @@ public class EmployeeView extends Layout{
         this.reservation_menu.add("Update").addActionListener(e -> {
             int selectedReservationId = this.getTableSelectedRow(tbl_reservation,0);
             Reservation reservation =this.reservationManager.getById(selectedReservationId);
-            BookRoomView bookRoomView = new BookRoomView(reservation);
+        //    System.out.println(ChronoUnit.DAYS.between(reservation.getCheckInDate(), reservation.getCheckOutDate()));
+            BookRoomView bookRoomView = new BookRoomView(reservation,String.valueOf(reservation.getCheckInDate()) ,String.valueOf(reservation.getCheckOutDate()),
+                    String.valueOf(reservation.getNumberOfChild()),String.valueOf(reservation.getNumberOfAdult()));
             //      BrandView brandView = new BrandView(this.brandManager.getById(selectedBrandId));
             bookRoomView.addWindowListener(new WindowAdapter() {
                 @Override
@@ -165,6 +173,13 @@ public class EmployeeView extends Layout{
             }
         });
 */
+        //    this.fld_s_check_in = new JFormattedTextField(new MaskFormatter("####-##-##"));
+   //     this.fld_s_check_out = new JFormattedTextField(new MaskFormatter("####-##-##"));
+        this.fld_s_check_in.setText("2024-01-01");
+        this.fld_s_check_out.setText("2024-01-02");
+        this.fld_search_count_of_child.setText("0");
+        this.fld_count_of_adult.setText("0");
+
         this.room_menu = new JPopupMenu();
         //book room
         room_menu.add("Book Room").addActionListener(e -> {
@@ -172,17 +187,26 @@ public class EmployeeView extends Layout{
             if (roomManager.getById(selectedRoomId).getStock() >0){
                 Reservation reservation = new Reservation();
                 reservation.setRoom_id(selectedRoomId);
-                BookRoomView bookRoomView = new BookRoomView(reservation);
-                bookRoomView.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        loadReservationTable();
+
+                if (fld_search_count_of_child.getText().isEmpty() || fld_count_of_adult.getText().isEmpty()){
+                    Helper.showMessage("fillCountOfChildAndAdult");
+                }else {
+                    if(Integer.parseInt(fld_search_count_of_child.getText()) + Integer.parseInt(fld_count_of_adult.getText()) > roomManager.getById(selectedRoomId).getNumberOfBed()){
+                        Helper.showMessage("moreThanNumberOfBed");
+                    }else{
+                        BookRoomView bookRoomView = new BookRoomView(reservation, fld_s_check_in.getText(), fld_s_check_out.getText(), fld_search_count_of_child.getText(), fld_count_of_adult.getText() );
+                        bookRoomView.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosed(WindowEvent e) {
+                                loadReservationTable();
                         /*Room updateRoom = roomManager.getById(selectedRoomId);
                         updateRoom.setStock(roomManager.getById(selectedRoomId).getStock() - 1);
                         roomManager.update(updateRoom);*/
-                        loadRoomTable(null);
+                                loadRoomTable(null);
+                            }
+                        });
                     }
-                });
+                }
             }else {
                 Helper.showMessage("outOfStock");
             }
@@ -192,7 +216,7 @@ public class EmployeeView extends Layout{
     }
 
     private void loadRoomTable(ArrayList<Object[]> roomList) {
-        Object[] col_room = {"Room ID", "Hotel Name","Pension Type","Room Type","Stock", "Child Price", "Adult Price", "Number Of Bed", "Area Of Room", "TV", "Bar", "Game Console", "Money Case", "Projection"};
+        col_room = new Object[]{"Room ID", "Hotel Name","Pension Type","Room Type","Stock", "Child Price", "Adult Price", "Number Of Bed", "Area Of Room", "TV", "Bar", "Game Console", "Money Case", "Projection"};
         if(roomList == null){
              roomList = this.roomManager.getForTable(col_room.length, this.roomManager.findAll());
         }
@@ -314,7 +338,8 @@ public class EmployeeView extends Layout{
         this.createTable(this.t_model_hotel,this.tbl_hotel,col_hotel,hotelList);
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
+    private void createUIComponents() throws ParseException {
+        fld_s_check_in = new JFormattedTextField(new MaskFormatter("####-##-##"));
+        fld_s_check_out = new JFormattedTextField(new MaskFormatter("####-##-##"));
     }
 }

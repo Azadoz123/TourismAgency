@@ -41,6 +41,14 @@ public class Helper {
                     msg = "Stock of this room not available";
                     title= "Error !";
                     break;
+            case "fillCountOfChildAndAdult":
+                msg = "Please fill count of child and adult";
+                title= "Error !";
+                break;
+            case "moreThanNumberOfBed":
+                msg = "Number of guest is more than number of bed";
+                title= "Error !";
+                break;
             default:
                 msg = str;
                 title = "Message";

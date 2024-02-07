@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class BookRoomView extends Layout{
     private JPanel container;
@@ -45,11 +46,13 @@ public class BookRoomView extends Layout{
     private JTextField fld_number_of_child;
     private JTextField fld_number_of_adult;
     private JButton btn_book_room;
+    int countOfChild;
+    int countOfAdult;
     private Reservation reservation;
     private Room room;
     private ReservationManager reservationManager;
     private RoomManager roomManager;
-    public BookRoomView(Reservation reservation) {
+    public BookRoomView(Reservation reservation, String check_in_date, String check_out_date, String  count_of_child, String count_of_adult)  {
  //   public BookRoomView(int selectedRoomId) {
   //     this.reservation = new Reservation();
         this.reservation = reservation;
@@ -104,6 +107,30 @@ public class BookRoomView extends Layout{
         this.rdb_projection.setSelected(this.roomManager.getById(selectedRoomId).isProjection());
         this.rdb_projection.setEnabled(false);
 
+        this.fld_check_in_date.setText(check_in_date);
+        this.fld_check_in_date.setEditable(false);
+        this.fld_check_out_date.setText(check_out_date);
+        this.fld_check_out_date.setEditable(false);
+        this.fld_number_of_child.setText(count_of_child);
+        this.fld_number_of_child.setEditable(false);
+        this.fld_number_of_adult.setText(count_of_adult);
+        this.fld_number_of_adult.setEditable(false);
+
+        if(count_of_child.equals("")){
+            countOfChild = 0;
+        }else {
+            countOfChild = Integer.parseInt(count_of_child);
+        }
+        if(count_of_adult.equals("")){
+            countOfChild = 0;
+         }else {
+           countOfAdult = Integer.parseInt(count_of_adult);
+       }
+        fld_total_price.setText(String.valueOf(
+                ChronoUnit.DAYS.between(LocalDate.parse(check_in_date), LocalDate.parse(check_out_date)) *
+                (Double.parseDouble(count_of_child) * roomManager.getById(selectedRoomId).getChildPrice()  +
+                        Double.parseDouble(count_of_adult) * roomManager.getById(selectedRoomId).getAdultPrice())));
+
         if (this.reservation.getId() != 0){
 
             this.fld_guest_ID.setText(reservation.getGuestCitizenId());
@@ -126,17 +153,25 @@ public class BookRoomView extends Layout{
                     Helper.showMessage("fill");
                 }else{
                     boolean result =true;
-                    reservation.setRoom_id(selectedRoomId);
-                    reservation.setCheckInDate(LocalDate.parse(fld_check_in_date.getText()) );
+                   /* reservation.setCheckInDate(LocalDate.parse(fld_check_in_date.getText()) );
                     reservation.setCheckOutDate(LocalDate.parse(fld_check_out_date.getText()));
-                    reservation.setTotalPrice( (Integer.parseInt(fld_number_of_child.getText()) * room.getChildPrice()) + (Integer.parseInt(fld_number_of_adult.getText()) * room.getAdultPrice()));
+                    reservation.setNumberOfChild(Integer.parseInt(fld_number_of_child.getText()) );
+                    reservation.setNumberOfAdult(Integer.parseInt(fld_number_of_adult.getText()) );*/
+                    reservation.setRoom_id(selectedRoomId);
+                    reservation.setCheckInDate(LocalDate.parse(check_in_date) );
+                    reservation.setCheckOutDate(LocalDate.parse(check_out_date));
+                    reservation.setNumberOfChild(Integer.parseInt(count_of_child));
+                    reservation.setNumberOfAdult(Integer.parseInt(count_of_adult));
+            //        reservation.setTotalPrice( (Integer.parseInt(fld_number_of_child.getText()) * room.getChildPrice()) + (Integer.parseInt(fld_number_of_adult.getText()) * room.getAdultPrice()));
+                    reservation.setTotalPrice( (ChronoUnit.DAYS.between(reservation.getCheckInDate(), reservation.getCheckOutDate()) *
+                            (Double.parseDouble(count_of_child) * roomManager.getById(selectedRoomId).getChildPrice()  +
+                                    Double.parseDouble(count_of_adult) * roomManager.getById(selectedRoomId).getAdultPrice())));
                     reservation.setGuestCount(Integer.parseInt(fld_number_of_adult.getText()) +Integer.parseInt(fld_number_of_adult.getText()));
                     reservation.setGuestCitizenId(fld_guest_ID.getText());
                     reservation.setGuestName(fld_guest_name.getText());
                     reservation.setGuestMail(fld_guest_mail.getText());
                     reservation.setGueastPhone(fld_guest_phone_number.getText());
-                    reservation.setNumberOfChild(Integer.parseInt(fld_number_of_child.getText()) );
-                    reservation.setNumberOfAdult(Integer.parseInt(fld_number_of_adult.getText()) );
+
 
                     if(reservation.getId() != 0){
                           result = reservationManager.update(reservation);
